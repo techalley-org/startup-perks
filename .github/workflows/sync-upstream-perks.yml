@@ -44,6 +44,9 @@ jobs:
           node scripts/build-dataset.mjs --validate-only
           node scripts/build-dataset.mjs
 
+      - name: Remove upstream checkout before PR creation
+        run: rm -rf upstream
+
       - name: Create pull request
         uses: peter-evans/create-pull-request@v7
         with:
