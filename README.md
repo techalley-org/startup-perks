@@ -109,6 +109,34 @@ Recommended setup:
 
 See [docs/wix-cms-schema.md](docs/wix-cms-schema.md) for the suggested collection fields.
 
+## Wix CMS sync automation
+
+This repo includes a GitHub Action that can sync `perks.json` into a Wix CMS collection after changes are merged to `main`.
+
+Files:
+
+- `.github/workflows/sync-wix-cms.yml`
+- `scripts/sync-wix-cms.mjs`
+- `config/wix-sync.json`
+
+Required GitHub repository secrets:
+
+- `WIX_API_KEY`
+- `WIX_SITE_ID`
+- `WIX_COLLECTION_ID`
+
+The sync script maps the repo dataset to the Wix field names currently used by the `StartupPerks` collection. Based on the current exported CMS header row, the repo `title` field maps to Wix's `Title` field.
+
+The action:
+
+1. checks out the repo on `main`
+2. reads `perks.json`
+3. queries existing Wix CMS items
+4. creates missing items
+5. updates existing items by `sourceId`
+
+Run manually from GitHub Actions or let it run automatically on pushes to `main` that change `perks.json` or the Wix sync files.
+
 ## Editorial rules
 
 - Use one file per public perk or program

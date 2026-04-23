@@ -1,0 +1,48 @@
+name: Sync Wix CMS
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "perks.json"
+      - "config/wix-sync.json"
+      - "scripts/sync-wix-cms.mjs"
+      - ".github/workflows/sync-wix-cms.yml"
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Validate required Wix secrets
+        run: |
+          test -n "${WIX_API_KEY}"
+          test -n "${WIX_SITE_ID}"
+          test -n "${WIX_COLLECTION_ID}"
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+          WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
+          WIX_COLLECTION_ID: ${{ secrets.WIX_COLLECTION_ID }}
+
+      - name: Sync perks into Wix CMS
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+          WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
+          WIX_COLLECTION_ID: ${{ secrets.WIX_COLLECTION_ID }}
+        run: node scripts/sync-wix-cms.mjs

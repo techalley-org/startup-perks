@@ -6,6 +6,7 @@
   "description": "Source-of-truth dataset and export tooling for the Tech Alley startup perks directory.",
   "scripts": {
     "sync-upstream": "node scripts/sync-upstream.mjs",
+    "sync-wix": "node scripts/sync-wix-cms.mjs",
     "build": "node scripts/build-dataset.mjs",
     "validate": "node scripts/build-dataset.mjs --validate-only"
   },
