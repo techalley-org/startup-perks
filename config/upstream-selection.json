@@ -1,0 +1,14 @@
+{
+  "repository": "jnd0/startup-perks",
+  "sourcePerksDir": "src/content/perks",
+  "perks": [
+    {
+      "upstreamSlug": "cloudflare-startups",
+      "localSlug": "cloudflare-for-startups"
+    },
+    {
+      "upstreamSlug": "github-for-startups",
+      "localSlug": "github-for-startups"
+    }
+  ]
+}

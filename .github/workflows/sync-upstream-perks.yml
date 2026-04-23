@@ -1,0 +1,58 @@
+name: Sync Selected Upstream Perks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 14 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Tech Alley repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check out upstream repo
+        uses: actions/checkout@v4
+        with:
+          repository: jnd0/startup-perks
+          path: upstream
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Sync selected perk files from upstream
+        env:
+          UPSTREAM_REPO_DIR: ${{ github.workspace }}/upstream
+        run: node scripts/sync-upstream.mjs
+
+      - name: Rebuild exports
+        run: |
+          node scripts/build-dataset.mjs --validate-only
+          node scripts/build-dataset.mjs
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/sync-upstream-perks
+          delete-branch: true
+          commit-message: "chore: sync selected startup perks from upstream"
+          title: "chore: sync selected startup perks from upstream"
+          body: |
+            This automated PR syncs the selected perk markdown files from `jnd0/startup-perks`,
+            then regenerates `perks.json` and `perks.csv`.
+
+            Review the content changes before merging.
+          labels: |
+            automation
+            startup-perks

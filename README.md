@@ -28,6 +28,28 @@ Tech Alley should maintain perk content here first, then sync the generated data
 4. Sync `perks.json` into the Wix CMS collection
 5. Show the collection on a members-only Wix page
 
+## Upstream sync automation
+
+This repo can selectively mirror perk files from `jnd0/startup-perks` using a scheduled GitHub Action.
+
+- Selection is controlled in `config/upstream-selection.json`
+- The workflow lives at `.github/workflows/sync-upstream-perks.yml`
+- The sync script lives at `scripts/sync-upstream.mjs`
+- The action opens a pull request instead of writing directly to `main`
+
+The workflow currently runs every Monday at 14:17 UTC and can also be started manually from GitHub Actions.
+
+To add another upstream listing, add a new item to `config/upstream-selection.json`:
+
+```json
+{
+  "upstreamSlug": "notion-for-startups",
+  "localSlug": "notion-for-startups"
+}
+```
+
+`upstreamSlug` is the markdown filename from `jnd0/startup-perks` without the `.md` extension. `localSlug` is the filename that should be used in this repo.
+
 ## Content model
 
 Each perk file contains frontmatter plus an optional markdown body.
@@ -64,12 +86,14 @@ Optional notes that appear in the exported `body` field.
 ## Commands
 
 ```bash
+npm run sync-upstream
 npm run validate
 npm run build
 ```
 
 Both commands use the same script:
 
+- `sync-upstream` copies selected markdown files from a checked-out upstream repo
 - `validate` checks that required fields, URLs, booleans, and dates are valid
 - `build` validates content and regenerates `perks.json` and `perks.csv`
 
