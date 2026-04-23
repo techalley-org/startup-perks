@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
@@ -12,10 +12,6 @@ const localOnlyFields = ["featured", "partnerOnly", "sortOrder"];
 const rawConfig = await readFile(configPath, "utf8");
 const config = JSON.parse(rawConfig);
 
-if (!Array.isArray(config.perks) || config.perks.length === 0) {
-  throw new Error("config/upstream-selection.json must define at least one selected perk.");
-}
-
 const sourcePerksDir = path.join(upstreamRoot, config.sourcePerksDir || "src/content/perks");
 const targetPerksDir = path.join(repoRoot, "src", "content", "perks");
 const cacheDir = path.join(repoRoot, ".cache");
@@ -23,9 +19,13 @@ const cacheDir = path.join(repoRoot, ".cache");
 await mkdir(targetPerksDir, { recursive: true });
 await mkdir(cacheDir, { recursive: true });
 
+const selectedPerks = await resolveSelectedPerks({
+  config,
+  sourcePerksDir
+});
 const synced = [];
 
-for (const perk of config.perks) {
+for (const perk of selectedPerks) {
   if (!perk.upstreamSlug) {
     throw new Error("Each selected perk must define an upstreamSlug.");
   }
@@ -62,6 +62,31 @@ await writeFile(
 );
 
 console.log(`Synced ${synced.length} perk file(s) from ${config.repository}.`);
+
+async function resolveSelectedPerks({ config, sourcePerksDir }) {
+  if (config.syncMode === "all") {
+    const entries = await readdir(sourcePerksDir, { withFileTypes: true });
+    const markdownSlugs = entries
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".md"))
+      .map((entry) => entry.name.replace(/\.md$/, ""))
+      .sort((a, b) => a.localeCompare(b));
+
+    if (markdownSlugs.length === 0) {
+      throw new Error("No upstream markdown perk files were found.");
+    }
+
+    return markdownSlugs.map((upstreamSlug) => ({
+      upstreamSlug,
+      localSlug: config.slugOverrides?.[upstreamSlug] || upstreamSlug
+    }));
+  }
+
+  if (Array.isArray(config.perks) && config.perks.length > 0) {
+    return config.perks;
+  }
+
+  throw new Error("config/upstream-selection.json must define either syncMode='all' or a non-empty perks array.");
+}
 
 async function readLocalFileIfPresent(filePath) {
   try {

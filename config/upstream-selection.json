@@ -1,10 +1,8 @@
 {
   "repository": "jnd0/startup-perks",
   "sourcePerksDir": "src/content/perks",
-  "perks": [
-    {
-      "upstreamSlug": "cloudflare-startups",
-      "localSlug": "cloudflare-for-startups"
-    }
-  ]
+  "syncMode": "all",
+  "slugOverrides": {
+    "cloudflare-startups": "cloudflare-for-startups"
+  }
 }
