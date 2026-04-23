@@ -1,27 +1,102 @@
-Tech Alley — Public Startup Perks Directory
+# Tech Alley Startup Perks
 
-A machine‑readable directory of publicly available startup discounts, credits, and perks.
-Includes cloud credits, SaaS tools, AI platforms, HR, finance, marketing, and productivity tools.
+This repository is the source of truth for the Tech Alley startup perks directory.
 
-This dataset powers the Tech Alley Startup Perks Directory and is updated weekly.
+It stores startup discount and credit listings as markdown content in `src/content/perks/` and exports two machine-readable files:
 
-Files
-perks.json — primary dataset (used by Wix CMS auto‑sync)
+- `perks.json`: primary export for Wix CMS sync
+- `perks.csv`: spreadsheet-friendly export for manual review or import
 
-perks.csv — spreadsheet‑friendly version
+Tech Alley should maintain perk content here first, then sync the generated data into Wix for member-only delivery on `techalley.org`.
 
-Use Cases
-Startup communities
+## Repo structure
 
-Founder resource hubs
+```text
+.
+|-- src/content/perks/    # One markdown file per perk
+|-- scripts/             # Export and validation tooling
+|-- docs/                # Implementation notes for Wix
+|-- perks.json           # Generated JSON export
+`-- perks.csv            # Generated CSV export
+```
 
-Automated perk directories
+## How it works
 
-Research and analysis
+1. Add or update a perk file in `src/content/perks/`
+2. Run `npm run validate`
+3. Run `npm run build`
+4. Sync `perks.json` into the Wix CMS collection
+5. Show the collection on a members-only Wix page
 
-Contributing
-Pull requests are welcome.
-Submit new perks via GitHub or the Tech Alley website.
+## Content model
 
-License
-MIT License — free to use, modify, and redistribute.
+Each perk file contains frontmatter plus an optional markdown body.
+
+Example:
+
+```md
+---
+company: Example Co
+title: Up to $5,000 in credits
+summary: Short factual summary for the perk card.
+perkType: credit
+amountDisplay: Up to $5,000 in credits
+eligibility: Early-stage startups with a valid website.
+fundingStages:
+  - Pre-seed
+  - Seed
+regions:
+  - Global
+categories:
+  - Cloud
+applyUrl: https://example.com/startups
+sourceUrl: https://example.com/startups
+lastVerified: 2026-04-23
+verified: true
+isActive: true
+featured: false
+partnerOnly: false
+sortOrder: 100
+---
+Optional notes that appear in the exported `body` field.
+```
+
+## Commands
+
+```bash
+npm run validate
+npm run build
+```
+
+Both commands use the same script:
+
+- `validate` checks that required fields, URLs, booleans, and dates are valid
+- `build` validates content and regenerates `perks.json` and `perks.csv`
+
+## Wix integration
+
+Recommended setup:
+
+1. Create a Wix CMS collection named `StartupPerks`
+2. Restrict the page to members only
+3. Restrict CMS collection read access to members only
+4. Import or sync `perks.json` into Wix
+5. Build a dynamic list page and dynamic item page for members
+
+See [docs/wix-cms-schema.md](docs/wix-cms-schema.md) for the suggested collection fields.
+
+## Editorial rules
+
+- Use one file per public perk or program
+- Tie every listing to an official source URL
+- Keep summaries factual and short
+- Update `lastVerified` every time a listing is reviewed
+- Set `isActive: false` when a perk is discontinued or no longer reliable
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+This repository is currently licensed under the MIT License in [LICENSE](LICENSE).

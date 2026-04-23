@@ -1,0 +1,14 @@
+{
+  "name": "techalley-startup-perks",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Source-of-truth dataset and export tooling for the Tech Alley startup perks directory.",
+  "scripts": {
+    "build": "node scripts/build-dataset.mjs",
+    "validate": "node scripts/build-dataset.mjs --validate-only"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
