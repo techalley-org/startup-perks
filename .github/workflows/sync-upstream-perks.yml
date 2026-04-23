@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: "17 14 * * 1"
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 permissions:
   contents: write
   pull-requests: write
@@ -15,21 +18,21 @@ jobs:
 
     steps:
       - name: Check out Tech Alley repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Check out upstream repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: jnd0/startup-perks
           path: upstream
           fetch-depth: 1
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Sync selected perk files from upstream
         env:
