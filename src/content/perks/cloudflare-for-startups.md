@@ -1,25 +1,26 @@
 ---
 company: Cloudflare
-title: Up to $250,000 in Cloudflare credits
-summary: "Cloudflare's startup program offers infrastructure credits for eligible startups that need performance, security, and developer platform services."
+title: Up to $350,000 in Cloudflare credits
+summary: "Cloudflare's startup program offers up to $350k in credits across three tiers for early-stage startups building on its developer platform, security, and networking services."
 perkType: credit
-amountDisplay: Up to $250,000 in credits
-creditValueUsd: 250000
+amountDisplay: Up to $350,000 in credits
+creditValueUsd: 350000
 currency: USD
-eligibility: Early-stage funded startups accepted into approved startup ecosystems and partner networks.
+eligibility: Founded within the last 10 years, funded up to Series B (most recent round within 12 months), building a technology product with a live website and active social presence. First-time applicants only.
 fundingStages:
   - Pre-seed
   - Seed
   - Series A
+  - Series B
 regions:
   - Global
 categories:
   - Cloud
   - Security
-  - Performance
-applyUrl: "https://www.cloudflare.com/forstartups/"
-sourceUrl: "https://www.cloudflare.com/forstartups/"
-lastVerified: 2026-04-23
+  - Developer Tools
+applyUrl: "https://www.cloudflare.com/startups/"
+sourceUrl: "https://www.cloudflare.com/startups/"
+lastVerified: 2026-05-26
 verified: true
 isActive: true
 featured: false
