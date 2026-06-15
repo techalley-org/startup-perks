@@ -20,7 +20,7 @@ applyUrl: "https://inworld.ai/startup-ai-credits"
 sourceUrl: "https://inworld.ai/startup-ai-credits"
 lastVerified: 2026-02-14
 verified: true
-isActive: true
+isActive: false
 ---
 
 Inworld AI provides up to $10,000 in credits and 1 million free minutes for startups building realtime conversational AI. Includes access to TTS, Inworld Runtime, and supported third-party model providers.
